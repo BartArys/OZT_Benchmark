@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="SettingsSchema"
+    targetNamespace="http://tempuri.org/SettingsSchema.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/SettingsSchema.xsd"
+    xmlns:mstns="http://tempuri.org/SettingsSchema.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="benchmark" type="benchmarkType"/>
+  <xs:element name="queries" type="querriesType"/>
+
+  <xs:element name="dbmses" type="dbmsesType"/>
+  <xs:element name="dbms" type="dbmsType"/>
+  <xs:element name="query" type="queryType"/>
+  
+  <xs:attribute name="frequency" type="xs:positiveInteger"/>
+  <xs:attribute name="identifier" type="xs:ID"/>
+  <xs:attribute name="connection" type="xs:string"/>
+
+  <xs:complexType name="benchmarkType">
+    <xs:sequence>
+      <xs:element ref="queries"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="querriesType">
+    <xs:sequence>
+      <xs:element ref="query" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute ref="frequency"/>
+  </xs:complexType>
+
+  <xs:complexType name="dbmsesType">
+    <xs:sequence>
+      <xs:element ref="dbms" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="dbmsType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(mysql|mssql|oracledb)"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="queryType" mixed="true">
+    <xs:sequence>
+      <xs:element ref="dbmses"/>
+    </xs:sequence>
+    <xs:attribute ref="identifier"/>
+  </xs:complexType>
+  
+</xs:schema>

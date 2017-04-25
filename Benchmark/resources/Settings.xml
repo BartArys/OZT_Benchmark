@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<benchmark xmlns="bench"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://tempuri.org/SettingsSchema.xsd SettingsSchema.xsd">
+  >
+  <databases>
+    <database connection="Server=LAPTOPBARTARYS\SQLEXPRESS;Integrated security=SSPI;database=unidb" process="sqlservr">1</database>
+    <database connection="server=127.0.0.1;uid=root;pwd=root;database=oztdatabase;" process="mysqld">2</database>
+  </databases>
+  <queries frequency="1">
+    <query identifier="1">
+      <dbmses>
+      </dbmses>
+      SELECT * FROM customer c WHERE c.cu_name IN
+      (SELECT u.us_name FROM users u WHERE u.us_class = 'administrator')
+      AND c.cu_fax =
+      (SELECT s.su_fax FROM supplier s WHERE s.su_phone = '123456')
+      AND c.cu_email IN
+      (SELECT s1.su_email FROM supplier s1 WHERE s1.su_email LIKE '%H%');
+    </query>
+    <query identifier="2">
+      <dbmses>
+      </dbmses>
+      SELECT i.it_serialnumber FROM item i WHERE i.it_price >
+      (SELECT AVG(i1.it_price) FROM item i1 WHERE i1.it_ca_id = i.it_ca_id);
+    </query>
+    <query identifier="3">
+      <dbmses>
+      </dbmses>
+      SELECT COUNT(r.re_id) AS countpayments, r.re_modeofpayment FROM receipt r GROUP BY r.re_modeofpayment;
+    </query>
+    <query identifier="4">
+      <dbmses>
+        <dbms>2</dbms>
+      </dbmses>
+      SELECT MAX(r.re_amount) AS countpayments,r.re_bank FROM receipt r GROUP BY r.re_bank;
+    </query>
+    <query identifier="5">
+      <dbmses>
+        <dbms>2</dbms>
+      </dbmses>
+      SELECT SUM(CAST(r.re_amount AS BIGINT)) AS countpayments,r.re_bank FROM receipt r GROUP BY r.re_bank;
+    </query>
+    <query identifier="6">
+      <dbmses>
+        <dbms>2</dbms>
+      </dbmses>
+      SELECT su_id , su_name
+      FROM supplier s
+      JOIN purchaseorder po ON s.su_id = po.po_su_id
+      JOIN users u ON po.po_us_id = u.us_id
+      JOIN movement m ON u.us_id = m.mo_us_id
+      JOIN movement_details md ON m.mo_id = md.mod_mo_id
+      JOIN item i ON md.mod_it_id = i.it_id
+      JOIN invoicedetail ivd ON i.it_id = ivd.ind_it_id
+      JOIN invoice iv ON ivd.ind_in_id = iv.in_id
+      JOIN customer c ON iv.in_cu_id = c.cu_id
+      WHERE su_name = cu_name;
+    </query>
+    <query identifier="7">
+      <dbmses>
+        <dbms>2</dbms>
+      </dbmses>
+      SELECT su_id , su_name
+      FROM supplier s
+      JOIN purchaseorder po ON s.su_id = po.po_su_id
+      JOIN users u ON po.po_us_id = u.us_id
+      JOIN movement m ON u.us_id = m.mo_us_id
+      JOIN movement_details md ON m.mo_id = md.mod_mo_id
+      JOIN item i ON md.mod_it_id = i.it_id
+      JOIN invoicedetail ivd ON i.it_id = ivd.ind_it_id
+      JOIN invoice iv ON ivd.ind_in_id = iv.in_id
+      JOIN customer c ON iv.in_cu_id = c.cu_id
+      WHERE su_name = cu_name
+      ORDER BY su_name;
+    </query>
+    <query identifier="8">
+      <dbmses>
+        <dbms>2</dbms>
+      </dbmses>
+      UPDATE Item SET Item.it_price = Item.it_price * 0.1
+      , Item.it_qtity = 10
+      , Item.it_description = 'TV' WHERE  Item.it_id  &gt;  10  
+      AND  Item.it_expirydate  &gt;  1/1/2007  
+      AND  Item.it_expirydate  &lt;  1/1/2008  
+      AND Item.it_manufacturer = 'Philips'
+      OR Item.it_manufacturer = 'Sharp'
+      OR Item.it_manufacturer = 'Toshiba';
+    </query>
+    <query identifier="9">
+      <dbmses>
+      </dbmses>
+      SELECT * from receipt r ORDER BY r.re_amount;
+    </query>
+    <query identifier="10">
+      <dbmses>
+      </dbmses>
+      SELECT * from receipt r ORDER BY r.re_date
+    </query>
+  </queries>
+</benchmark>

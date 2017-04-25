@@ -1,0 +1,270 @@
+﻿CREATE DATABASE uniDB;
+use uniDB;
+
+CREATE TABLE category 
+  ( 
+     ca_id          INT IDENTITY NOT NULL, 
+     ca_description VARCHAR(50) NULL, 
+     ca_code        VARCHAR(50) NULL, 
+     PRIMARY KEY (ca_id) 
+  ); 
+
+CREATE TABLE customer 
+  ( 
+     cu_id        INT IDENTITY NOT NULL, 
+     cu_name      VARCHAR(50) NULL, 
+     cu_telephone VARCHAR(50) NULL, 
+     cu_fax       VARCHAR(50) NULL, 
+     cu_email     VARCHAR(50) NULL, 
+     PRIMARY KEY (cu_id) 
+  ); 
+
+CREATE TABLE invoice 
+  ( 
+     in_id                 INT IDENTITY NOT NULL, 
+     in_date               DATETIME NULL, 
+     in_description        CHAR(50) NULL, 
+     in_total              INT NULL, 
+     in_discount           CHAR(50) NULL, 
+     in_totalafterdiscount INT NULL, 
+     in_cu_id              INT NOT NULL,
+	 in_totalinletter      VARCHAR(50) NULL,
+     PRIMARY KEY (in_id) 
+  ); 
+
+CREATE TABLE invoicedetail 
+  ( 
+     ind_id    INT IDENTITY NOT NULL, 
+     ind_qty   INT NULL, 
+     ind_total FLOAT(53) NULL, 
+     ind_in_id INT NOT NULL, 
+     ind_it_id INT NOT NULL, 
+     PRIMARY KEY (ind_id) 
+  ); 
+
+CREATE TABLE item 
+  ( 
+     it_id           INT IDENTITY NOT NULL, 
+     it_serialnumber CHAR(50) NULL, 
+     it_code         CHAR(50) NULL, 
+     it_barcode      CHAR(10) NULL, 
+     it_expirydate   DATETIME NULL, 
+     it_description  CHAR(50) NULL, 
+     it_manufacturer CHAR(50) NULL, 
+     it_price        FLOAT(10) NOT NULL, 
+     it_qtity        INT NULL, 
+     it_ca_id        INT NOT NULL, 
+     it_lo_id        INT NOT NULL, 
+     PRIMARY KEY (it_id) 
+  ); 
+
+CREATE TABLE location 
+  ( 
+     lo_id          INT IDENTITY NOT NULL, 
+     lo_description VARCHAR(50) NULL, 
+     lo_code        VARCHAR(50) NULL, 
+     PRIMARY KEY (lo_id) 
+  ); 
+
+CREATE TABLE movement 
+  ( 
+     mo_id          INT IDENTITY NOT NULL, 
+     mo_description CHAR(50) NULL, 
+     mo_date        DATETIME NULL, 
+     mo_us_id       INT NOT NULL, 
+     PRIMARY KEY (mo_id) 
+  ); 
+
+CREATE TABLE movement_details 
+  ( 
+     mod_id           INT IDENTITY NOT NULL, 
+     mod_qtity        INT NULL, 
+     mod_fromlocation CHAR(50) NULL, 
+     mod_tolocation   CHAR(50) NULL, 
+     mod_it_id        INT NOT NULL, 
+     mod_mo_id        INT NOT NULL, 
+     PRIMARY KEY (mod_id) 
+  ); 
+
+CREATE TABLE purchaseorder 
+  ( 
+     po_id          INT IDENTITY NOT NULL, 
+     po_description CHAR(50) NOT NULL, 
+     po_dateofissue DATETIME NULL, 
+     po_recievedate DATETIME NULL, 
+     po_status      CHAR(50) NULL, 
+     po_us_id       INT NOT NULL, 
+     po_su_id       INT NOT NULL, 
+     PRIMARY KEY (po_id) 
+  ); 
+
+CREATE TABLE purchaseorder_details 
+  ( 
+     pod_id             INT IDENTITY NOT NULL, 
+     pod_qtity          INT NULL, 
+     pod_remainingqtity INT NULL, 
+     pod_po_id          INT NOT NULL, 
+     pod_it_id          INT NOT NULL, 
+     PRIMARY KEY (pod_id) 
+  ); 
+
+CREATE TABLE receipt 
+  ( 
+     re_id            INT IDENTITY NOT NULL, 
+     re_date          DATETIME NULL, 
+     re_amount        INT NULL, 
+     re_modeofpayment VARCHAR(50) NULL, 
+     re_checknumber   VARCHAR(50) NULL, 
+     re_bank          VARCHAR(50) NULL, 
+     re_cu_id         INT NOT NULL, 
+     PRIMARY KEY (re_id) 
+  ); 
+
+CREATE TABLE stockcount 
+  ( 
+     st_id          INT IDENTITY NOT NULL, 
+     st_description VARCHAR(50) NULL, 
+     st_date        DATETIME NULL, 
+     st_status      VARCHAR(50) NULL, 
+     st_us_id       INT NOT NULL, 
+     PRIMARY KEY (st_id) 
+  ); 
+
+CREATE TABLE stockcount_details 
+  ( 
+     std_id             INT IDENTITY NOT NULL, 
+     std_qtity          INT NULL, 
+     std_remainingqtity INT NULL, 
+     std_it_id          INT NOT NULL, 
+     std_st_id          INT NOT NULL, 
+     PRIMARY KEY (std_id) 
+  ); 
+
+CREATE TABLE supplier 
+  ( 
+     su_id      INT IDENTITY NOT NULL, 
+     su_name    VARCHAR(50) NULL, 
+     su_phone   VARCHAR(50) NULL, 
+     su_address VARCHAR(50) NULL, 
+     su_fax     VARCHAR(50) NULL, 
+     su_email   VARCHAR(50) NULL, 
+     PRIMARY KEY (su_id) 
+  ); 
+
+CREATE TABLE users 
+  ( 
+     us_id       INT IDENTITY NOT NULL, 
+     us_code     VARCHAR(50) NULL, 
+     us_name     VARCHAR(50) NULL, 
+     us_password VARCHAR(50) NULL, 
+     us_class    VARCHAR(50) NULL, 
+     PRIMARY KEY (us_id) 
+  ); 
+
+CREATE UNIQUE INDEX category_ca_id 
+  ON category (ca_id); 
+
+CREATE UNIQUE INDEX customer_cu_id 
+  ON customer (cu_id); 
+
+CREATE UNIQUE INDEX invoice_in_id 
+  ON invoice (in_id); 
+
+CREATE UNIQUE INDEX invoicedetail_ind_id 
+  ON invoicedetail (ind_id); 
+
+CREATE UNIQUE INDEX item_it_id 
+  ON item (it_id); 
+
+CREATE UNIQUE INDEX location_lo_id 
+  ON location (lo_id); 
+
+CREATE UNIQUE INDEX movement_mo_id 
+  ON movement (mo_id); 
+
+CREATE UNIQUE INDEX movement_details_mod_id 
+  ON movement_details (mod_id); 
+
+CREATE UNIQUE INDEX purchaseorder_po_id 
+  ON purchaseorder (po_id); 
+
+CREATE UNIQUE INDEX purchaseorder_details_pod_id 
+  ON purchaseorder_details (pod_id); 
+
+CREATE UNIQUE INDEX receipt_re_id 
+  ON receipt (re_id); 
+
+CREATE UNIQUE INDEX stockcount_st_id 
+  ON stockcount (st_id); 
+
+CREATE UNIQUE INDEX stockcount_details_std_id 
+  ON stockcount_details (std_id); 
+
+CREATE UNIQUE INDEX supplier_su_id 
+  ON supplier (su_id); 
+
+CREATE UNIQUE INDEX users_us_id 
+  ON users (us_id); 
+
+ALTER TABLE movement 
+  ADD CONSTRAINT fkmovement726305 FOREIGN KEY (mo_us_id) REFERENCES users (us_id 
+  ); 
+
+ALTER TABLE purchaseorder 
+  ADD CONSTRAINT fkpurchaseor810233 FOREIGN KEY (po_su_id) REFERENCES supplier ( 
+  su_id); 
+
+ALTER TABLE purchaseorder 
+  ADD CONSTRAINT fkpurchaseor700758 FOREIGN KEY (po_us_id) REFERENCES users ( 
+  us_id); 
+
+ALTER TABLE stockcount 
+  ADD CONSTRAINT fkstockcount935040 FOREIGN KEY (st_us_id) REFERENCES users ( 
+  us_id); 
+
+ALTER TABLE stockcount_details 
+  ADD CONSTRAINT fkstockcount287456 FOREIGN KEY (std_st_id) REFERENCES 
+  stockcount (st_id); 
+
+ALTER TABLE stockcount_details 
+  ADD CONSTRAINT fkstockcount119559 FOREIGN KEY (std_it_id) REFERENCES item ( 
+  it_id); 
+
+ALTER TABLE receipt 
+  ADD CONSTRAINT fkreceipt842860 FOREIGN KEY (re_cu_id) REFERENCES customer ( 
+  cu_id); 
+
+ALTER TABLE purchaseorder_details 
+  ADD CONSTRAINT fkpurchaseor28259 FOREIGN KEY (pod_it_id) REFERENCES item ( 
+  it_id); 
+
+ALTER TABLE purchaseorder_details 
+  ADD CONSTRAINT fkpurchaseor700094 FOREIGN KEY (pod_po_id) REFERENCES 
+  purchaseorder (po_id); 
+
+ALTER TABLE movement_details 
+  ADD CONSTRAINT fkmovement_d82357 FOREIGN KEY (mod_mo_id) REFERENCES movement ( 
+  mo_id); 
+
+ALTER TABLE movement_details 
+  ADD CONSTRAINT fkmovement_d251967 FOREIGN KEY (mod_it_id) REFERENCES item ( 
+  it_id); 
+
+ALTER TABLE item 
+  ADD CONSTRAINT fkitem926047 FOREIGN KEY (it_lo_id) REFERENCES location (lo_id) 
+; 
+
+ALTER TABLE item 
+  ADD CONSTRAINT fkitem53614 FOREIGN KEY (it_ca_id) REFERENCES category (ca_id); 
+
+ALTER TABLE invoicedetail 
+  ADD CONSTRAINT fkinvoicedet830691 FOREIGN KEY (ind_it_id) REFERENCES item ( 
+  it_id); 
+
+ALTER TABLE invoicedetail 
+  ADD CONSTRAINT fkinvoicedet461370 FOREIGN KEY (ind_in_id) REFERENCES invoice ( 
+  in_id); 
+
+ALTER TABLE invoice 
+  ADD CONSTRAINT fkinvoice159361 FOREIGN KEY (in_cu_id) REFERENCES customer ( 
+  cu_id); 
